@@ -39,6 +39,6 @@ def profile_network(network, inputs, warming_up_step = 100, mertrix_step = 1000,
 
 if __name__ == "__main__":
     x = torch.randn((1, 3, 224, 224), requires_grad=True).cuda()
-    network = models.densenet121(pretrained=True).cuda()
+    network = models.alexnet(pretrained=True).cuda()
     profile_network(network, x, 1000, 1000)
 
