@@ -6,7 +6,7 @@ It is easy to profile a network and show the result layer by layer. The result i
 
 This is a demo to show how to use it:
 
-'''python
+```python
 
 import torch
 import torchvision.models as models
@@ -15,10 +15,10 @@ from profile_runner import profile_network
 x = torch.randn((1, 3, 224, 224), requires_grad=True).cuda() # sample inputs
 network = models.alexnet(pretrained = True).cuda()  # alexnet for example, and it can be other network built from nn.Module
 profile_network(network = network, inputs = x, warming_up_step = 1000, mertrix_step = 1000, save_path = 'res.csv')
-'''
+```
 
 And you can use it on your own networks. For example:
-'''python
+```python
 
 import torch
 import torch.nn as nn
@@ -38,4 +38,4 @@ class Net1(nn.Module):
 x = torch.randn((1, 3, 224, 224), requires_grad=True).cuda() # sample inputs
 network = Net1().cuda()  # alexnet for example, and it can be other network built from nn.Module
 profile_network(network = network, inputs = x, warming_up_step = 1000, mertrix_step = 1000, save_path = 'res.csv')
-'''
+```
