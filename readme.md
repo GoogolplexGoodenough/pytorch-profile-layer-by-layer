@@ -39,7 +39,7 @@ profile_network(network = network, inputs = x, warming_up_step = 1000, mertrix_s
 ```
 
 The result is following table. (AlexNet)
-```
+
 | Total CPU Time | Total CUDA Time | Total CPU time% | Total CUDA Time % | Average CPU Time | Average CUDA Time | Parameters | Input Size | Input Shape        | Input Data Type | Numbers of Calls | Architecture                                                                           |
 |----------------|-----------------|-----------------|-------------------|------------------|-------------------|------------|------------|--------------------|-----------------|------------------|----------------------------------------------------------------------------------------|
 | 169\.59ms      | 218\.45ms       | 7\.41%          | 5\.52%            | 169\.59us        | 218\.45us         | 23\.30k    | 150\.53k   | \[1, 3, 224, 224\] | torch\.float32  | 1000             | \(0\): Conv2d\(3, 64, kernel\_size=\(11, 11\), stride=\(4, 4\), padding=\(2, 2\)\)     |
@@ -64,4 +64,4 @@ The result is following table. (AlexNet)
 | 36\.61ms       | 41\.52ms        | 1\.60%          | 1\.05%            | 36\.61us         | 41\.52us          | \-         | 4\.10k     | \[1, 4096\]        | torch\.float32  | 1000             | \(5\): ReLU\(inplace=True\)                                                            |
 | 83\.85ms       | 139\.91ms       | 3\.67%          | 3\.53%            | 83\.85us         | 139\.91us         | 4\.10m     | 4\.10k     | \[1, 4096\]        | torch\.float32  | 1000             | \(6\): Linear\(in\_features=4096, out\_features=1000, bias=True\)                      |
 
-```
+
