@@ -7,6 +7,7 @@ It is easy to profile a network and show the result layer by layer. The result i
 This is a demo to show how to use it:
 
 '''python
+
 import torch
 import torchvision.models as models
 from profile_runner import profile_network
@@ -18,6 +19,7 @@ profile_network(network = network, inputs = x, warming_up_step = 1000, mertrix_s
 
 And you can use it on your own networks. For example:
 '''python
+
 import torch
 import torch.nn as nn
 from profile_runner import profile_network
