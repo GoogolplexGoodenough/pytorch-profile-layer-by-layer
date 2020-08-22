@@ -92,36 +92,16 @@ class Profiler(object):
                     item = []
                 prof.function_events = []
 
-
-                # self._events['forward'][op] += Event(
-                #     # cpu_time=sum([item.cpu_time_total - sum(child.cpu_time_total for child in item.cpu_children) for item in prof.function_events]),
-                #     cpu_time=sum(prof.total_average().cpu_time),
-                #     gpu_time=sum([item.cuda_time_total - sum(child.cuda_time_total for child in item.cpu_children) for item in prof.function_events]),
-                #     parameters=count_elements(op.parameters()),
-                #     input_size=count_elements(input),
-                #     input_shape=format_shape(input),
-                #     input_data_type=format_dtype(input),
-                #     hits=1)
-            
             def backward_pre_hook(*args):
                 if not self._enable:
                     return
                 self._events['backward'][op].append(time.time())
-            #result.grad_fn.register_pre_hook(backward_pre_hook);
             return result
 
-        # monky patch "__call__" with "wrapper_call"  for this operation`
+
         if op.__class__ not in self._operations:
             self._operations[op.__class__] = op.__class__.__call__
             op.__class__.__call__ = wrapper_call
-
-        #def backward_post_hook(*args):
-        #    if not this_profiler.profiling_on:
-        #        return
-        #    # adds ending time
-        #    backward = this_profiler.record['backward']
-        #    backward[-1] = backward[-1] + (time.time(),) 
-        #op.register_backward_hook(backward_post_hook)   
     
     def sum_total_time(self):
         total_cpu_time = 0
@@ -136,30 +116,20 @@ class Profiler(object):
         print(self.total_gpu_time, format_time(self.total_gpu_time))
         pass
 
-    @lru_cache(maxsize=None)
-    def get_metrics(self, module):
-        if module in self._events['forward']:
-            #it's an operation
-            return self._events['forward'][module]
-        return reduce(operator.add, map(self.get_metrics, module._modules.values()))
-    
+
     def __str__(self, module=None, indentation=0, pre_msg=''):
         tmpstr = ''
         if module is None:
             module = self._module
             tmpstr += Event.header()
 
-        # metrics = self.get_metrics(module)
-        metrics = self.get_metrics(module).tostring(self.total_cpu_time, self.total_gpu_time)
-    
-        if module.__class__ in self._operations:
-            return  tmpstr + metrics + ',' '\"' + pre_msg + module.__repr__() + '\"' + '\n'
-        
-        name = module.__class__.__name__
-
-        for key, sub_module in module._modules.items():
-            tmpstr +=  self.__str__(sub_module, indentation+2, pre_msg='(' + key + '): ')
-
+        for module in self._events['forward']:
+            if module.__class__ in self._operations:
+                metrics = self._events['forward'][module].tostring(self.total_cpu_time, self.total_gpu_time)
+                tmpstr = tmpstr + metrics + ',' '\"' + pre_msg + module.__repr__() + '\"' + '\n'
+            name = module.__class__.__name__
+            for key, sub_module in module._modules.items():
+                tmpstr +=  self.__str__(sub_module, indentation+2, pre_msg='(' + key + '): ')
         return tmpstr        
 
 class Event(object):
@@ -198,7 +168,6 @@ class Event(object):
                 format_str(self.hits)])
     
     def __add__(self, other):
-        # print(format_time(self.cpu_time), format_time(other.cpu_time), format_time(self.cpu_time + other.cpu_time), self.hits, other.hits)
         return Event(
             self.cpu_time + other.cpu_time,
             self.gpu_time + other.gpu_time,
